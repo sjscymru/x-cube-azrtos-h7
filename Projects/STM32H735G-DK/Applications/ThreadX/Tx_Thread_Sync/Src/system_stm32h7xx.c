@@ -153,7 +153,7 @@ void SystemInit (void)
   if(FLASH_LATENCY_DEFAULT  > (READ_BIT((FLASH->ACR), FLASH_ACR_LATENCY)))
   {
     /* Program the new number of wait states to the LATENCY bits in the FLASH_ACR register */
-	MODIFY_REG(FLASH->ACR, FLASH_ACR_LATENCY, (uint32_t)(FLASH_LATENCY_DEFAULT));
+    MODIFY_REG(FLASH->ACR, FLASH_ACR_LATENCY, (uint32_t)(FLASH_LATENCY_DEFAULT));
   }
 
   /* Set HSION bit */
@@ -169,7 +169,7 @@ void SystemInit (void)
   if(FLASH_LATENCY_DEFAULT  < (READ_BIT((FLASH->ACR), FLASH_ACR_LATENCY)))
   {
     /* Program the new number of wait states to the LATENCY bits in the FLASH_ACR register */
-	MODIFY_REG(FLASH->ACR, FLASH_ACR_LATENCY, (uint32_t)(FLASH_LATENCY_DEFAULT));
+    MODIFY_REG(FLASH->ACR, FLASH_ACR_LATENCY, (uint32_t)(FLASH_LATENCY_DEFAULT));
   }
 
 #if defined(D3_SRAM_BASE)
@@ -264,7 +264,8 @@ void SystemInit (void)
 #ifdef VECT_TAB_SRAM
   SCB->VTOR = D1_AXISRAM_BASE  | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal AXI-RAM */
 #else
-  SCB->VTOR = FLASH_BANK1_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
+  extern void* g_pfnVectors;
+  SCB->VTOR = (uint32_t)(&g_pfnVectors); /* Vector Table Relocation in Internal FLASH */
 #endif
 
 #endif /*DUAL_CORE && CORE_CM4*/

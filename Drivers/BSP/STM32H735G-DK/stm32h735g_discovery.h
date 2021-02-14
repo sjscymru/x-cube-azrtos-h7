@@ -156,15 +156,15 @@ typedef struct
   * @{
   */
 
-#define LED1_GPIO_PORT                   GPIOC
-#define LED1_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOC_CLK_ENABLE()
-#define LED1_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOC_CLK_DISABLE()
-#define LED1_PIN                         GPIO_PIN_3
+#define LED1_GPIO_PORT                   GPIOH
+#define LED1_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOH_CLK_ENABLE()
+#define LED1_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOH_CLK_DISABLE()
+#define LED1_PIN                         GPIO_PIN_15
 
-#define LED2_GPIO_PORT                   GPIOC
-#define LED2_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOC_CLK_ENABLE()
-#define LED2_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOC_CLK_DISABLE()
-#define LED2_PIN                         GPIO_PIN_2
+#define LED2_GPIO_PORT                   GPIOI
+#define LED2_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOI_CLK_ENABLE()
+#define LED2_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOI_CLK_DISABLE()
+#define LED2_PIN                         GPIO_PIN_1
 
 /**
   * @}
@@ -196,9 +196,9 @@ typedef struct
 /**
  * @brief Definition for COM port1, connected to USART3
  */
-#define COM1_UART                      USART3
-#define COM1_CLK_ENABLE()             __HAL_RCC_USART3_CLK_ENABLE()
-#define COM1_CLK_DISABLE()            __HAL_RCC_USART3_CLK_DISABLE()
+#define COM1_UART                      USART4
+#define COM1_CLK_ENABLE()             __HAL_RCC_USART4_CLK_ENABLE()
+#define COM1_CLK_DISABLE()            __HAL_RCC_USART4_CLK_DISABLE()
 
 #define COM1_TX_PIN                   GPIO_PIN_8
 #define COM1_TX_GPIO_PORT             GPIOD

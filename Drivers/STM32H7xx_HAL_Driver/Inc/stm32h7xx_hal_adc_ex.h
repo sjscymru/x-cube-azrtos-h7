@@ -1207,7 +1207,10 @@ typedef struct
                                                   ((__SHIFT__) == ADC_RIGHTBITSHIFT_5   ) || \
                                                   ((__SHIFT__) == ADC_RIGHTBITSHIFT_6   ) || \
                                                   ((__SHIFT__) == ADC_RIGHTBITSHIFT_7   ) || \
-                                                  ((__SHIFT__) == ADC_RIGHTBITSHIFT_8   ))
+												  ((__SHIFT__) == ADC_RIGHTBITSHIFT_8   ) || \
+												  ((__SHIFT__) == ADC_RIGHTBITSHIFT_9   ) || \
+												  ((__SHIFT__) == ADC_RIGHTBITSHIFT_10  ) || \
+                                                  ((__SHIFT__) == ADC_RIGHTBITSHIFT_11  ))
 
 /**
   * @brief Verify the ADC oversampling triggered mode.

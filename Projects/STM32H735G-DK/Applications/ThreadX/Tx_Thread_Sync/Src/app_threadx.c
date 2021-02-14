@@ -55,7 +55,7 @@ TX_THREAD ThreadTwo;
 TX_BYTE_POOL BytePool;
 APP_SYNC_TYPE SyncObject;
 
-extern UART_HandleTypeDef huart3;
+extern UART_HandleTypeDef huart4;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -146,7 +146,7 @@ void ThreadOne_Entry(ULONG thread_input)
     /* try to acquire the sync object without waiting */
     if (APP_SYNC_GET(&SyncObject, TX_NO_WAIT) == TX_SUCCESS)
     {
-      printf("** ThreadOne : SyncObject acquired ** \n");
+      printf("** ThreadOne : SyncObject acquired ** \r\n");
       
       /*sync object acquired, toggle the LED_GREEN each 500ms for 5s */
       Led_Toggle(LED_GREEN, 10);
@@ -155,7 +155,7 @@ void ThreadOne_Entry(ULONG thread_input)
       /*release the sync object */
       APP_SYNC_PUT(&SyncObject);
       
-      printf("** ThreadOne : SyncObject released ** \n");
+      printf("** ThreadOne : SyncObject released ** \r\n");
 
       tx_thread_sleep(10);
     }
@@ -164,7 +164,7 @@ void ThreadOne_Entry(ULONG thread_input)
 
       if ((iteration % 2000000) == 0)
       {
-        printf("** ThreadOne : waiting for SyncObject !! **\n");
+        printf("** ThreadOne : waiting for SyncObject !! **\r\n");
       }
     }
     iteration++;
@@ -187,7 +187,7 @@ void ThreadTwo_Entry(ULONG thread_input)
     /* try to acquire the sync object without waiting */
     if (APP_SYNC_GET(&SyncObject, TX_NO_WAIT) == TX_SUCCESS)
     {
-      printf("** ThreadTwo : SyncObject acquired ** \n");
+      printf("** ThreadTwo : SyncObject acquired ** \r\n");
       
       /*Sync object acquired toggle the LED_RED each 500ms for 5s*/
       Led_Toggle(LED_RED, 10);
@@ -195,7 +195,7 @@ void ThreadTwo_Entry(ULONG thread_input)
       /*release the sync object*/
       APP_SYNC_PUT(&SyncObject);
       
-      printf("** ThreadTwo : SyncObject released ** \n");
+      printf("** ThreadTwo : SyncObject released ** \r\n");
 
       tx_thread_sleep(10);
 
@@ -204,7 +204,7 @@ void ThreadTwo_Entry(ULONG thread_input)
     {
       if ((iteration % 2000000) == 0)
       {
-        printf("** ThreadTwo : waiting for SyncObject !! **\n");
+        printf("** ThreadTwo : waiting for SyncObject !! **\r\n");
       }
     }
     iteration++;
@@ -252,7 +252,7 @@ PUTCHAR_PROTOTYPE
 {
   /* Place your implementation of fputc here */
   /* e.g. write a character to the USART1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, 0xFFFF);
+  HAL_UART_Transmit(&huart4, (uint8_t *)&ch, 1, 0xFFFF);
 
   return ch;
 }

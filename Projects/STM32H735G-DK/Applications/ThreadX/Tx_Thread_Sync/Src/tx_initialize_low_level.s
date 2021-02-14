@@ -30,7 +30,7 @@
     EXTERN  _tx_execution_isr_exit
 ;
 ;
-SYSTEM_CLOCK      EQU   520000000
+SYSTEM_CLOCK      EQU   240000000
 SYSTICK_CYCLES    EQU   ((SYSTEM_CLOCK / 1000) -1)
 
     RSEG    FREE_MEM:DATA
@@ -211,7 +211,7 @@ SysTick_Handler:
 @
 @
 
-SYSTEM_CLOCK      =   520000000
+SYSTEM_CLOCK      =   240000000
 SYSTICK_CYCLES    =   ((SYSTEM_CLOCK / 1000) -1)
 
     .text 32
@@ -301,7 +301,7 @@ _tx_initialize_low_level:
     ORR     r1, r1, #1                              @ Set the CYCCNTENA bit
     STR     r1, [r0]                                @ Enable the cycle count register
 @
-@    /* Configure SysTick for 100Hz clock, or 16384 cycles if no reference.  */
+@    /* Configure SysTick for 1kHz clock, or 16384 cycles if no reference.  */
 @
     MOV     r0, #0xE000E000                         @ Build address of NVIC registers
     LDR     r1, =SYSTICK_CYCLES

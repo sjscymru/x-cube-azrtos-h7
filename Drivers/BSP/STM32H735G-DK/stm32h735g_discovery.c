@@ -50,8 +50,8 @@ typedef void (* BSP_EXTI_LineCallback) (void);
   */
 static void BUTTON_USER_EXTI_Callback(void);
 #if (USE_BSP_COM_FEATURE > 0)
-static void USART1_MspInit(UART_HandleTypeDef *huart);
-static void USART1_MspDeInit(UART_HandleTypeDef *huart);
+static void USART_MspInit(UART_HandleTypeDef *huart);
+static void USART_MspDeInit(UART_HandleTypeDef *huart);
 #endif
 
 /**
@@ -361,7 +361,7 @@ int32_t BSP_COM_Init(COM_TypeDef COM, COM_InitTypeDef *COM_Init)
   {
     /* Init the UART Msp */
 #if (USE_HAL_UART_REGISTER_CALLBACKS == 0)
-    USART1_MspInit(&hcom_uart[COM]);
+    USART_MspInit(&hcom_uart[COM]);
 #else
     if(IsComMspCbValid[COM] == 0U)
     {
@@ -455,7 +455,7 @@ int32_t BSP_COM_RegisterDefaultMspCallbacks(COM_TypeDef COM)
     __HAL_UART_RESET_HANDLE_STATE(&hcom_uart[COM]);
 
     /* Register default MspInit/MspDeInit Callback */
-    if(HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPINIT_CB_ID, USART1_MspInit) != HAL_OK)
+    if(HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPINIT_CB_ID, USART_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -550,33 +550,36 @@ int32_t BSP_COM_SelectLogPort(COM_TypeDef COM)
   * @param  huart UART handle
   * @retval None
   */
-static void USART1_MspInit(UART_HandleTypeDef *huart)
+static void USART_MspInit(UART_HandleTypeDef *huart)
 {
-  GPIO_InitTypeDef gpio_init_structure;
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    if(uartHandle->Instance==UART4)
+    {
+    /* USER CODE BEGIN UART4_MspInit 0 */
 
-  /* Prevent unused argument(s) compilation warning */
-  UNUSED(huart);
+    /* USER CODE END UART4_MspInit 0 */
+      /* UART4 clock enable */
+      __HAL_RCC_UART4_CLK_ENABLE();
 
-  /* Enable GPIO clock */
-  COM1_TX_GPIO_CLK_ENABLE();
-  COM1_RX_GPIO_CLK_ENABLE();
+      __HAL_RCC_GPIOH_CLK_ENABLE();
+      /**UART4 GPIO Configuration
+      PH13     ------> UART4_TX
+      PH14     ------> UART4_RX
+      */
+      GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14;
+      GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+      GPIO_InitStruct.Pull = GPIO_NOPULL;
+      GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+      GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
+      HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
 
-  /* Enable USART clock */
-  COM1_CLK_ENABLE();
-
-  /* Configure USART Tx as alternate function */
-  gpio_init_structure.Pin = COM1_TX_PIN;
-  gpio_init_structure.Mode = GPIO_MODE_AF_PP;
-  gpio_init_structure.Speed = GPIO_SPEED_FREQ_HIGH;
-  gpio_init_structure.Pull = GPIO_PULLUP;
-  gpio_init_structure.Alternate = COM1_TX_AF;
-  HAL_GPIO_Init(COM1_TX_GPIO_PORT, &gpio_init_structure);
-
-  /* Configure USART Rx as alternate function */
-  gpio_init_structure.Pin = COM1_RX_PIN;
-  gpio_init_structure.Mode = GPIO_MODE_AF_PP;
-  gpio_init_structure.Alternate = COM1_RX_AF;
-  HAL_GPIO_Init(COM1_RX_GPIO_PORT, &gpio_init_structure);
+      /* UART4 interrupt Init */
+      HAL_NVIC_SetPriority(UART4_IRQn, 5, 0);
+      HAL_NVIC_EnableIRQ(UART4_IRQn);
+    /* USER CODE BEGIN UART4_MspInit 1 */
+      usart_user_init(uartHandle);
+    /* USER CODE END UART4_MspInit 1 */
+    }
 }
 
 /**
@@ -584,22 +587,28 @@ static void USART1_MspInit(UART_HandleTypeDef *huart)
   * @param  huart UART handle
   * @retval None
   */
-static void USART1_MspDeInit(UART_HandleTypeDef *huart)
+static void USART_MspDeInit(UART_HandleTypeDef *huart)
 {
-  GPIO_InitTypeDef          gpio_init_structure;
+    if(uartHandle->Instance==UART4)
+    {
+    /* USER CODE BEGIN UART4_MspDeInit 0 */
 
-  /* Prevent unused argument(s) compilation warning */
-  UNUSED(huart);
+    /* USER CODE END UART4_MspDeInit 0 */
+      /* Peripheral clock disable */
+      __HAL_RCC_UART4_CLK_DISABLE();
 
-  /* COM GPIO pin configuration */
-  gpio_init_structure.Pin  = COM1_TX_PIN;
-  HAL_GPIO_DeInit(COM1_TX_GPIO_PORT, gpio_init_structure.Pin);
+      /**UART4 GPIO Configuration
+      PH13     ------> UART4_TX
+      PH14     ------> UART4_RX
+      */
+      HAL_GPIO_DeInit(GPIOH, GPIO_PIN_13|GPIO_PIN_14);
 
-  gpio_init_structure.Pin  = COM1_RX_PIN;
-  HAL_GPIO_DeInit(COM1_RX_GPIO_PORT, gpio_init_structure.Pin);
+      /* UART4 interrupt Deinit */
+      HAL_NVIC_DisableIRQ(UART4_IRQn);
+    /* USER CODE BEGIN UART4_MspDeInit 1 */
 
-  /* Disable USART clock */
-  COM1_CLK_DISABLE();
+    /* USER CODE END UART4_MspDeInit 1 */
+    }
 }
 #endif
 /**
